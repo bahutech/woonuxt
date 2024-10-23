@@ -4,7 +4,7 @@
  * Below are the default values.
  */
 export default defineAppConfig({
-  siteName: 'WooNuxt',
+  siteName: 'AliExpress',
   shortDescription: 'This is an example of a WooNuxt store. It provides a modern, fast, and SEO friendly ecommerce store built with Nuxt and WooCommerce.',
   description: `WooNuxt is unmatched when it comes to performance and scalability. Reap the benefits of having a online store that out performs all of your competitors. You can edit components to display your own information just like the one you're reading now.`,
   baseUrl: 'https://v3.woonuxt.com',

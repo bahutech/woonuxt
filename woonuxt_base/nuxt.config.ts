@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'en' },
-      link: [{ rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }],
+      link: [{ rel: 'icon', href: '/logo.png', type: 'image/svg+xml' }],
     },
     pageTransition: { name: 'page', mode: 'default' },
   },
@@ -73,6 +73,7 @@ export default defineNuxtConfig({
   i18n: {
     locales: [
       { code: 'en_US', file: 'en-US.json', name: 'English 🇺🇸' },
+      { code: 'am_ET', file: 'am-ET.json', name: 'Amharic ET' },
       { code: 'de_DE', file: 'de-DE.json', name: 'Deutsch 🇩🇪' },
       { code: 'es_ES', file: 'es-ES.json', name: 'Español 🇪🇸' },
       { code: 'fr_FR', file: 'fr-FR.json', name: 'Français 🇫🇷' },

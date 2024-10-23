@@ -24,12 +24,11 @@ onBeforeMount(async () => {
 
 const payNow = async () => {
   buttonText.value = t('messages.general.processing');
-
-  const { stripePaymentIntent } = await GqlGetStripePaymentIntent();
-  const clientSecret = stripePaymentIntent?.clientSecret || '';
-
+  
   try {
     if (orderInput.value.paymentMethod.id === 'stripe' && stripe && elements.value) {
+      const { stripePaymentIntent } = await GqlGetStripePaymentIntent();
+      const clientSecret = stripePaymentIntent?.clientSecret || '';
       const cardElement = elements.value.getElement('card') as StripeCardElement;
       const { setupIntent } = await stripe.confirmCardSetup(clientSecret, { payment_method: { card: cardElement } });
       const { source } = await stripe.createSource(cardElement as CreateSourceData);
@@ -44,7 +43,10 @@ const payNow = async () => {
     console.error(error);
     buttonText.value = t('messages.shop.placeOrder');
   }
-
+  /* if(orderInput.value.paymentMethod.id !== 'stripe'){
+    isPaid.value = setupIntent?.status === 'succeeded' || false;
+      orderInput.value.transactionId = source?.created?.toString() || new Date().getTime().toString();
+  } */
   proccessCheckout(isPaid.value);
 };
 

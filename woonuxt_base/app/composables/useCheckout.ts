@@ -1,4 +1,6 @@
 import type { CheckoutInput, UpdateCustomerInput, CreateAccountInput } from '#gql';
+import axios from 'axios';
+import https from 'https';
 
 export function useCheckout() {
   const orderInput = useState<any>('orderInput', () => {
@@ -50,6 +52,22 @@ export function useCheckout() {
     });
   }
 
+  function opentelepayWindow(redirectUrl: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      const width = 750;
+      const height = 750;
+      const left = window.innerWidth / 2 - width / 2;
+      const top = window.innerHeight / 2 - height / 2 + 80;
+      const telepayWindow = window.location.replace(redirectUrl);
+      const timer = setInterval(() => {
+        /* if (telepayWindow?) {
+          clearInterval(timer);
+          resolve(true);
+        } */
+      }, 500);
+    });
+  }
+
   const proccessCheckout = async (isPaid = false) => {
     const { customer, loginUser } = useAuth();
     const router = useRouter();
@@ -90,6 +108,93 @@ export function useCheckout() {
       const orderKey = checkout?.order?.orderKey;
       const orderInputPaymentId = orderInput.value.paymentMethod.id;
       const isPayPal = orderInputPaymentId === 'paypal' || orderInputPaymentId === 'ppcp-gateway';
+      const isTeleBirr = orderInputPaymentId === 'cheque';
+      
+      //TeleBirr Payment
+      if(isTeleBirr){
+        isProcessingOrder.value = false;
+
+        /* let data = JSON.stringify({
+          "appSecret": "fad0f06383c6297f545876694b974599"
+        });
+        
+        let config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: 'https://196.188.120.3:38443/apiaccess/payment/gateway/payment/v1/token',
+          headers: { 
+            'X-APP-Key': 'c4182ef8-9249-458a-985e-06d191f4d505', 
+            'Content-Type': 'application/json'
+          },
+          httpsAgent: new https.Agent({
+            rejectUnauthorized: false
+          }),
+          data : data
+        };
+        
+        axios.request(config)
+        .then((response) => {
+          console.log("response")
+          console.log(response)
+          alert(JSON.stringify(response));
+        })
+        .catch((error) => {
+          alert(error);
+        }); */
+        window.handleinitDataCallback = function () {
+          window.location.href = window.location.origin;
+        };
+        
+       // let loading = weui.loading("loading", {});
+       let telepay = await window
+          .fetch("http://localhost:8081" + "/create/order", {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              title: "diamond_" + "50",
+              amount: "50" + "",
+            }),
+          })
+          .then((res) => {
+          console.log("res");
+          console.log(res);
+          alert({res});
+            res
+              .text()
+              .then(async (rawRequest) => {
+            console.log("rawRequest");
+            console.log(rawRequest.trim());
+                let obj = JSON.stringify({
+                  functionName: "js_fun_start_pay",
+                  params: {
+                    rawRequest: rawRequest.trim(),
+                    functionCallBackName: "handleinitDataCallback",
+                  },
+                });
+      
+                if (typeof rawRequest === undefined || rawRequest === null) return;
+                if (window.consumerapp === undefined || window.consumerapp === null) {
+                  const istelepayWindowClosed = await opentelepayWindow(rawRequest.trim());
+                  console.log("This is not opened in app!");
+                  return;
+                }
+                window.consumerapp.evaluate(obj);
+              })
+              .catch((error) => {
+                console.log("error occur", error);
+              })
+              .finally(() => {});
+          })
+          .finally(() => {
+            //loading.hide();
+          });
+        //startPay();
+        console.log(telepay);
+        alert('You payed using TeleBirr');
+      return null;
+      }
 
       // PayPal redirect
       if ((await checkout?.redirect) && isPayPal) {

@@ -42,10 +42,10 @@ useSeoMeta({
               <Icon name="ion:bag-check-outline" size="22" />
               {{ $t('messages.shop.order', 2) }}
             </NuxtLink>
-            <NuxtLink to="/my-account?tab=downloads" class="flex items-center gap-4 p-2 px-4" :class="{ active: activeTab == 'downloads' }">
+            <!-- <NuxtLink to="/my-account?tab=downloads" class="flex items-center gap-4 p-2 px-4" :class="{ active: activeTab == 'downloads' }">
               <Icon name="ion:cloud-download-outline" size="22" />
               {{ $t('messages.general.downloads') }}
-            </NuxtLink>
+            </NuxtLink> -->
             <NuxtLink to="/my-account?tab=wishlist" class="flex items-center gap-4 p-2 px-4" :class="{ active: activeTab == 'wishlist' }">
               <Icon name="ion:heart-outline" size="22" />
               Wishlist
